@@ -1,4 +1,4 @@
-package no.tripletex.amager;
+package com.ardoq.addon.maven;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.client.HttpClientConfiguration;
@@ -31,20 +31,9 @@ public class MavenAddonConfiguration extends Configuration implements AssetsBund
     private final AssetsConfiguration assets = new AssetsConfiguration();
 
     
-    @Override
     public AssetsConfiguration getAssetsConfiguration() {
         return assets;
     }
-	
-	
-	public AWS getAws() {
-		return aws;
-	}
-
-	public Docker getDocker() {
-		return docker;
-	}
-
 	
     public HttpClientConfiguration getHttpClientConfiguration() {
         return httpClient;

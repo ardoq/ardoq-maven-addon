@@ -1,17 +1,14 @@
-package no.tripletex.amager;
+package com.ardoq.addon.maven;
+
+import org.apache.http.client.HttpClient;
+
+import com.bazaarvoice.dropwizard.webjars.WebJarBundle;
 
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.client.HttpClientBuilder;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import no.tripletex.amager.docker.DockerRegistryClient;
-import no.tripletex.amager.ec2.EC2Client;
-import no.tripletex.amager.ec2.EC2HealthCheck;
-
-import org.apache.http.client.HttpClient;
-
-import com.bazaarvoice.dropwizard.webjars.WebJarBundle;
 
 public class MavenAddonApplication extends Application<MavenAddonConfiguration> {
 
