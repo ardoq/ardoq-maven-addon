@@ -1,4 +1,5 @@
 server:
+  rootPath: /api/*
   applicationConnectors:
     - type: http
       port: 8080
@@ -6,5 +7,19 @@ server:
     - type: http
       port: 8081
 
-      
-      
+
+ardoq:
+  host: ${ARDOQ_HOST:-dockerhost}
+  protocol: ${ARDOQ_HOST_PROTOCOL:-https}
+
+
+httpClient:
+  timeout: 5000ms
+  connectionTimeout: 5000ms
+  timeToLive: 1h
+  cookiesEnabled: false
+  maxConnections: 1024
+  maxConnectionsPerRoute: 1024
+  keepAlive: 0ms
+  retries: 0
+  userAgent: Ardoq Maven Import Addon (dropwizard httpClient)
