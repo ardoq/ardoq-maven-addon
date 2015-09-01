@@ -23,3 +23,8 @@ httpClient:
   keepAlive: 0ms
   retries: 0
   userAgent: Ardoq Maven Import Addon (dropwizard httpClient)
+
+
+logging:
+  loggers:
+    org.glassfish.jersey.filter.LoggingFilter: OFF

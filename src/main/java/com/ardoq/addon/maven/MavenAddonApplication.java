@@ -1,6 +1,8 @@
 package com.ardoq.addon.maven;
 
 import org.apache.http.client.HttpClient;
+import org.glassfish.jersey.filter.LoggingFilter;
+import org.slf4j.Logger;
 
 import com.bazaarvoice.dropwizard.webjars.WebJarBundle;
 
@@ -41,10 +43,13 @@ public class MavenAddonApplication extends Application<MavenAddonConfiguration> 
                                             .build("ardoq maven addon http client");
 
 
-        MavenAddonAPI api = new MavenAddonAPI(httpClient);
+        MavenAddonAPI api = new MavenAddonAPI(configuration.getArdoq(), httpClient);
         environment.jersey().register(api);
 
-        environment.healthChecks().register("ec2",new MavenAddonHealthCheck());
+        environment.healthChecks().register("addonhealth",new MavenAddonHealthCheck());
+
+
+        environment.jersey().register(new LoggingFilter(java.util.logging.Logger.getLogger(LoggingFilter.class.getName()),true));
     }
 
 }
