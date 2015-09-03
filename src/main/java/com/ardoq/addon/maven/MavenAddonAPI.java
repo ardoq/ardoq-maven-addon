@@ -178,10 +178,8 @@ public class MavenAddonAPI {
         System.out.println("token "+token);
         System.out.println("organization "+organization);
 
-//    	org=piedpiper&token=2854b08d642b43ffb4281b68188bb6fb
         StreamingOutput stream = new StreamingOutput() {
 
-            @Override
             public void write(OutputStream os) throws IOException, WebApplicationException {
                 System.out.println("starting");
                 int i=500;

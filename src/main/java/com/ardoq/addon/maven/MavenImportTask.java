@@ -43,7 +43,6 @@ public class MavenImportTask implements Callable<String>{
     }
 
 
-    @Override
     public String call() throws Exception {
         String key = getKey();
         mode = Mode.RUNNING;
@@ -69,6 +68,8 @@ public class MavenImportTask implements Callable<String>{
         workspaceInstance.setDescription("Maven POM import "+new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date()));
 
         projectSync.syncProject(imp.getArtifact());
+        projectSync.addExclusions(mavenUtil);
+
         ardoqSync.updateWorkspaceIfDifferent(workspaceInstance);
         ardoqSync.deleteNotSyncedItems();
 
