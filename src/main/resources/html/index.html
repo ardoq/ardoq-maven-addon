@@ -32,12 +32,12 @@
 
       <div id="artifactIdDiv">
         <div class="form-group">
-          <label for="artifactId" class="col-sm-2 control-label">Artifact ID:</label>
+          <label for="artifactId" class="col-sm-2 control-label">Artifact ID</label>
 
           <div class="col-sm-10">
             <input class="form-control" id="artifactId" name="artifactId"
                    placeholder="io.dropwizard:dropwizard-core:0.8.1"
-                   required >
+                   required>
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@
 
 
       <div class="form-group hidden">
-        <label for="org" class="col-sm-2 control-label">Organization:</label>
+        <label for="org" class="col-sm-2 control-label">Organization</label>
 
         <div class="col-sm-10">
           <input type="text" class="form-control" id="org"
@@ -63,7 +63,7 @@
       </div>
 
       <div class="form-group hidden">
-        <label for="token" class="col-sm-2 control-label">Api token:</label>
+        <label for="token" class="col-sm-2 control-label">Api token</label>
 
         <div class="col-sm-10">
           <input type="password" class="form-control" id="token"
@@ -73,21 +73,79 @@
 
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-primary">Import</button>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Advanced
+          </button>
+          <div class="collapse" id="collapseExample">
+            <div class="well">
+
+
+              <div class="form-group">
+                <label for="scopeCompile" class="col-sm-2 control-label">Scope</label>
+
+                <div class="col-sm-10" >
+                        <div class="radio">
+                            <label>
+                            <input type="radio" name="scope" id="scopeCompile" value="compile" checked />
+                                Compile, Provided, Runtime
+                            </label>
+                        </div>
+
+                        <div class="radio">
+                            <label>
+                            <input type="radio" name="scope" id="scopeTest" value="test" />
+                                Compile, Test, Provided, Runtime <i>(note that for large projects, this can take a long time)</i>
+                            </label>
+                        </div>
+
+                </div>
+              </div>
+
+
+                <hr/>
+
+              <div class="form-group">
+                <label for="repoURL" class="col-sm-2 control-label">Repository URL</label>
+
+                <div class="col-sm-10">
+                  <input type="URL" class="form-control" id="repoURL"
+                         placeholder="http://your-own-repository/maven"
+                         name="repoURL">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="repoUsername" class="col-sm-2 control-label">Username</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="repoUsername"
+                         placeholder=""
+                         name="repoUsername">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="repoPassword" class="col-sm-2 control-label">Password</label>
+
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="repoPassword"
+                         placeholder=""
+                         name="repoPassword">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-success">&#9654; Start import</button>
         </div>
       </div>
     </form>
 
-    <div id="progress-dialog" class="hidden" >
-      <h4>Importing...</h4>
-
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped active"
-             role="progressbar" aria-valuenow="45" aria-valuemin="0"
-             aria-valuemax="100" style="width: 45%">
-             <span class="sr-only">45% Complete</span></div>
-      </div>
-    </div>
 
     <div id="error-dialog" class="alert alert-danger hidden" role="alert" >
       <p></p>

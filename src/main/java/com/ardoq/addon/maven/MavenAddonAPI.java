@@ -1,10 +1,5 @@
 package com.ardoq.addon.maven;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -66,6 +57,11 @@ public class MavenAddonAPI {
         if(StringUtils.isEmpty(imp.getArtifact())){ throw new IllegalArgumentException("aritfact is required");}
 
         MavenImportTask task = new MavenImportTask(config,imp,runningTasks);
+
+        if(StringUtils.isNoneEmpty(imp.getRepoURL())) {
+            task.addRepository(imp.getRepoURL(), imp.getRepoUsername(), imp.getRepoPassword());
+        }
+
         fixedPool.submit(task);
         logger.info("starting maven import of " + task.getKey());
         return "\""+task.getKey()+"\""; // enclosing in " to serve as JSON
@@ -98,6 +94,7 @@ public class MavenAddonAPI {
         private String organization;
         private String workspace;
         private String token;
+        private String scope;
         private String repoURL;
         private String repoUsername;
         private String repoPassword;
@@ -125,6 +122,12 @@ public class MavenAddonAPI {
         }
         public void setToken(String token) {
             this.token = token;
+        }
+        public String getScope() {
+            return scope;
+        }
+        public void setScope(String scope) {
+            this.scope = scope;
         }
         public String getRepoURL() {
             return repoURL;
@@ -165,45 +168,5 @@ public class MavenAddonAPI {
         }
     }
 
-
-    @Timed
-    @POST
-    @Path("/import2")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response tags(@QueryParam("artifactId") String artifactId,
-                        @QueryParam("token") String token,
-                        @QueryParam("organization") String organization) throws Exception{
-
-        System.out.println("artifactId "+artifactId);
-        System.out.println("token "+token);
-        System.out.println("organization "+organization);
-
-        StreamingOutput stream = new StreamingOutput() {
-
-            public void write(OutputStream os) throws IOException, WebApplicationException {
-                System.out.println("starting");
-                int i=500;
-
-                Writer writer = new BufferedWriter(new OutputStreamWriter(os));
-                while( --i>0){
-                    System.out.print("w");
-                    writer.write("test sdf asdfasd fasd fas df asdf asd f asdf as df as df asdf as df asd fas df asd fa sdf asd fa sdf asd fa sdf as df asdf a sdf a\n<br/>");
-                    writer.write(i);
-                    writer.flush();
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                System.out.println("done");
-                os.flush();
-                os.close();
-            }
-        };
-        return Response.ok(stream).build();
-
-
-    }
 
 }

@@ -29,7 +29,7 @@ public class MavenImportTask implements Callable<String>{
     ImportDefinition imp;
     Map<String, MavenImportTask> runningTasks;
     Mode mode;
-
+    MavenUtil mavenUtil;
     LogBuffer logBuffer = new LogBuffer();
 
     public MavenImportTask(ArdoqConfig config, ImportDefinition imp, Map<String, MavenImportTask> runningTasks) {
@@ -37,9 +37,24 @@ public class MavenImportTask implements Callable<String>{
         this.imp = imp;
         this.runningTasks = runningTasks;
 
+
+        String[] filteredScopes = new String[]{"test","provided"};
+
+        if("test".equals(imp.getScope())){
+            // when user specifies test scope - don't filter out any scopes - note that the test scopes can take a looong time..
+            filteredScopes = new String[]{};
+        }
+
+        mavenUtil = new MavenUtil(new PrintStream(logBuffer),filteredScopes);
+
         mode = Mode.PENDING;
         String key = getKey();
         runningTasks.put(key,this);
+    }
+
+
+    public void addRepository(String url, String username, String password){
+        mavenUtil.addRepository(url, username, password);
     }
 
 
@@ -53,7 +68,6 @@ public class MavenImportTask implements Callable<String>{
         String modelName = "Maven";
         ardoqClient.model().findOrCreate(modelName, ArdoqMavenImport.class.getResourceAsStream("/model.json"));
 
-        MavenUtil mavenUtil = new MavenUtil(new PrintStream(logBuffer));
 
         String workspace = imp.getWorkspace();
         if(StringUtils.isEmpty(workspace)){

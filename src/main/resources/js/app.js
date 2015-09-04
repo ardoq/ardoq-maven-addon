@@ -72,16 +72,15 @@
         $("form").hide();
         $("#progress-dialog").show();
 
-        var artifact = $('#artifactId').val();
-        var workspace = $('#wsname').val();
-        var organization = $('#org').val();
-        var token = $('#token').val();
-
         var data = JSON.stringify({
-                    'artifact':artifact,
-                    'workspace':workspace,
-                    'organization':organization,
-                    'token':token
+                    'artifact':$('#artifactId').val(),
+                    'workspace':$('#wsname').val(),
+                    'organization':$('#org').val(),
+                    'token':$('#token').val(),
+                    'scope':$('input[name="scope"]:checked').val(),
+                    'repoURL':$('#repoURL').val(),
+                    'repoUsername':$('#repoUsername').val(),
+                    'repoPassword':$('#repoPassword').val()
                 });
             console.log(data);
 
