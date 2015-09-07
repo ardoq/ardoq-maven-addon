@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -79,8 +80,15 @@ public class MavenImportTask implements Callable<String>{
         ProjectSync projectSync = new ProjectSync(ardoqSync, mavenUtil);
 
         Workspace workspaceInstance = ardoqSync.getWorkspace();
-        workspaceInstance.setDescription("Maven POM import "+new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date()));
 
+        String description = "This is an automatically imported workspace, "
+                + "based on information from the Maven Project Object Model (POM) with coordinates: ***"+imp.getArtifact()+"***\n"
+                + "\n"
+                + "> Please don't edit this workspace manually! Changes will be overwritten the next time the import is triggered. If you need more documentation, create a separate workspace and create implicit references into this workspace. \n"
+                + "\n"
+                + "Import timestamp: "+new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date());
+        workspaceInstance.setDescription(description);
+        workspaceInstance.setViews(Arrays.asList("processflow","componenttree","tableview","reader","integrations"));
         projectSync.syncProject(imp.getArtifact());
         projectSync.addExclusions(mavenUtil);
 
