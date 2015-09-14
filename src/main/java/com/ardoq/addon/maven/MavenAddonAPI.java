@@ -78,10 +78,11 @@ public class MavenAddonAPI {
         MavenImportTask task = runningTasks.get(importKey);
 
         if(task==null){
-            status.setMode(Mode.DONE);
+            status.setMode(Mode.ERROR);
             return status;
         }
 
+        status.setWorkspaceURL(config.getProtocol()+"://"+config.getHost()+"/app/view/processflow/workspace/"+task.getWorkspaceID()+"/component/"+task.getComponentID());
         status.setMode(task.getMode());
         task.emptyOutputBufferInto(status.getOutputBuffer());
         return status;
@@ -150,10 +151,11 @@ public class MavenAddonAPI {
 
     }
 
-    public enum Mode { PENDING, RUNNING, DONE};
+    public enum Mode { PENDING, RUNNING, DONE, ERROR};
     public static class Status {
         private Mode mode;
         private List<String> outputBuffer = new LinkedList<String>();
+        private String workspaceURL;
         public Mode getMode() {
             return mode;
         }
@@ -166,6 +168,13 @@ public class MavenAddonAPI {
         public void setOutputBuffer(List<String> outputBuffer) {
             this.outputBuffer = outputBuffer;
         }
+        public String getWorkspaceURL() {
+            return workspaceURL;
+        }
+        public void setWorkspaceURL(String workspaceURL) {
+            this.workspaceURL = workspaceURL;
+        }
+
     }
 
 

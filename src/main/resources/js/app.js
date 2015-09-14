@@ -46,7 +46,8 @@
 
         $.get("/api/status/"+jobkey, function(status){
             if(status.mode === "DONE") {
-                body.append('<br/><br/><div class="alert alert-success" role="alert">Done! Your Maven Project and dependencies are imported into Ardoq</div>');
+                body.append('<br/><br/><div class="alert alert-success" role="alert">Done! Your Maven Project and dependencies are imported into Ardoq! </div>');
+                body.append('<a class="btn btn-primary btn-lg" href="'+status.workspaceURL+'" role="button" target="_parent">Open workspace</a>');
                 window.scrollTo(0,document.body.scrollHeight);
                 return;
             }
@@ -57,10 +58,15 @@
 
             console.log(status);
             $(status.outputBuffer).each(function(i,d){
-                console.log(d);
                 body.append(d).append('<br/>');
                 window.scrollTo(0,document.body.scrollHeight);
             });
+
+            if(status.mode === "ERROR") {
+                body.append('<br/><br/><div class="alert alert-danger" role="alert">Error! Something went wrong with your import. Please make sure that your artifact ID is correct, and available.</div>');
+                window.scrollTo(0,document.body.scrollHeight);
+                return;
+            }
 
             window.setTimeout(function(){pollStatus(jobkey);},500);
         });
