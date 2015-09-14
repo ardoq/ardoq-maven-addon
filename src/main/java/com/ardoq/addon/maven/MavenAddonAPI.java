@@ -2,8 +2,6 @@ package com.ardoq.addon.maven;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,13 +20,18 @@ import org.slf4j.LoggerFactory;
 
 import com.ardoq.addon.maven.MavenAddonConfiguration.ArdoqConfig;
 import com.codahale.metrics.annotation.Timed;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class MavenAddonAPI {
     private static final Logger logger = LoggerFactory.getLogger(MavenAddonAPI.class);
 
-    Map<String,MavenImportTask> runningTasks = new ConcurrentHashMap<String,MavenImportTask>();
+    ConcurrentLinkedHashMap<String,MavenImportTask> runningTasks
+        = new ConcurrentLinkedHashMap.Builder<String,MavenImportTask>()
+            .maximumWeightedCapacity(1000)
+            .build();
+
     ExecutorService fixedPool = Executors.newFixedThreadPool(10);
 
     ArdoqConfig config;
