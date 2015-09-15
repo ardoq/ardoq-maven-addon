@@ -41,7 +41,6 @@
 
     var x = 0;
     var pollStatus = function(jobkey) {
-        console.log("polling status");
         var body = $("body");
 
         $.get("/api/status/"+jobkey, function(status){
@@ -56,7 +55,6 @@
                 body.append('.');
             }
 
-            console.log(status);
             $(status.outputBuffer).each(function(i,d){
                 body.append(d).append('<br/>');
                 window.scrollTo(0,document.body.scrollHeight);
@@ -88,7 +86,6 @@
                     'repoUsername':$('#repoUsername').val(),
                     'repoPassword':$('#repoPassword').val()
                 });
-            console.log(data);
 
         $.ajax({
             type: "POST",
@@ -97,14 +94,11 @@
             data : data,
             success: function(jobkey) {
                 $("body").html("Importing Maven dependencies ...<br/>");
-                console.log("job started: "+jobkey);
                 pollStatus(jobkey);
             },
             error: function(e) {
                 $("body").html("Sorry! something went wrong..");
-                console.log(e);
             }
         });
-        console.log("after");
     });
   });
