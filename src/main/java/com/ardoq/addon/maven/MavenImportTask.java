@@ -3,28 +3,20 @@ package com.ardoq.addon.maven;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.project.MavenProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ardoq.ArdoqClient;
 import com.ardoq.addon.maven.MavenAddonAPI.ImportDefinition;
 import com.ardoq.addon.maven.MavenAddonAPI.Mode;
 import com.ardoq.addon.maven.MavenAddonConfiguration.ArdoqConfig;
 import com.ardoq.mavenImport.ArdoqMavenImport;
 import com.ardoq.mavenImport.MavenUtil;
-import com.ardoq.mavenImport.ProjectSync;
-import com.ardoq.model.Workspace;
-import com.ardoq.util.SyncUtil;
 
 
 public class MavenImportTask implements Callable<String>{
@@ -71,38 +63,18 @@ public class MavenImportTask implements Callable<String>{
         try {
             mode = Mode.RUNNING;
 
-            ArdoqClient ardoqClient = new ArdoqClient(config.getProtocol()+"://"+config.getHost(),imp.getToken());
-            ardoqClient.setOrganization(imp.getOrganization());
-
             String modelName = "Maven";
-            ardoqClient.model().findOrCreate(modelName, ArdoqMavenImport.class.getResourceAsStream("/model.json"));
+            ArdoqMavenImport ardoqMavenImport = new ArdoqMavenImport(config.getProtocol()+"://"+config.getHost(),imp.getWorkspace(), modelName, imp.getOrganization(), imp.getToken());
 
-
-            String workspace = imp.getWorkspace();
-            if(StringUtils.isEmpty(workspace)){
-                MavenProject mavenProject = mavenUtil.loadProject(imp.getArtifact());
-                workspace = "Maven project "+mavenProject.getName();
+            List<String> artifactList = new LinkedList<String>();
+            for(String s:imp.getArtifact().split("[, ]")){
+                if(s.trim().length()>0){
+                    artifactList.add(s);
+                }
             }
-
-            SyncUtil ardoqSync = new SyncUtil(ardoqClient, workspace, modelName);
-            ProjectSync projectSync = new ProjectSync(ardoqSync, mavenUtil);
-
-            Workspace workspaceInstance = ardoqSync.getWorkspace();
-
-            String description = "This is an automatically imported workspace, "
-                    + "based on information from the Maven Project Object Model (POM) with coordinates: ***"+imp.getArtifact()+"***\n"
-                    + "\n"
-                    + "> Please don't edit this workspace manually! Changes will be overwritten the next time the import is triggered. If you need more documentation, create a separate workspace and create implicit references into this workspace. \n"
-                    + "\n"
-                    + "Import timestamp: "+new SimpleDateFormat("yyyy.MM.dd HH:mm").format(new Date());
-            workspaceInstance.setDescription(description);
-            workspaceInstance.setViews(Arrays.asList("processflow","componenttree","tableview","reader","integrations"));
-            workspaceID = workspaceInstance.getId();
-            componentID = projectSync.syncProject(imp.getArtifact());
-            projectSync.addExclusions(mavenUtil);
-
-            ardoqSync.updateWorkspaceIfDifferent(workspaceInstance);
-            ardoqSync.deleteNotSyncedItems();
+            List<String> projectIDs = ardoqMavenImport.startImport(artifactList,mavenUtil);
+            componentID = projectIDs.get(0);
+            workspaceID = ardoqMavenImport.getWorkspaceID();
 
             mode = Mode.DONE;
         } catch (Exception e) {
