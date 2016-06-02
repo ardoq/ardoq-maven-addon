@@ -1,4 +1,4 @@
-FROM ardoq/java:3.2-8u51
+FROM ardoq/java:3.3-8u74
 MAINTAINER Kristian Helgesen "<kristian@ardoq.com>"
 
 ADD target/ardoq-maven-addon.jar ardoq-maven-addon.jar
