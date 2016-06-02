@@ -63,8 +63,7 @@ public class MavenImportTask implements Callable<String>{
         try {
             mode = Mode.RUNNING;
 
-            String modelName = "Maven";
-            ArdoqMavenImport ardoqMavenImport = new ArdoqMavenImport(config.getProtocol()+"://"+config.getHost(),imp.getWorkspace(), modelName, imp.getOrganization(), imp.getToken());
+            ArdoqMavenImport ardoqMavenImport = new ArdoqMavenImport(config.getProtocol()+"://"+config.getHost(),imp.getWorkspace(), imp.getOrganization(), imp.getToken());
 
             List<String> artifactList = new LinkedList<String>();
             for(String s:imp.getArtifact().split("[, ]")){

@@ -5,7 +5,7 @@
 
     <artifactId>ardoq-maven-addon</artifactId>
     <groupId>com.ardoq.tools</groupId>
-    <version>0.1</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -19,7 +19,7 @@
         <dependency>
             <artifactId>ardoq-maven-import</artifactId>
             <groupId>com.ardoq.tools</groupId>
-            <version>0.1</version>
+            <version>0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
